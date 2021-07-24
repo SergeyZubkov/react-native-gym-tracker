@@ -13,6 +13,10 @@ function Cell({value}) {
 export default function ResultTableView() {
     return (
         <ResultTableBase
+            data={{
+              weights: [12],
+              repetitions: [11]
+            }}
             bgColor="#E1E2E1"
             renderCell={(value, index) => <Cell value={value} key={index} />}
         />
@@ -28,10 +32,6 @@ export default function ResultTableView() {
 
     },
     cell: {
-        flexBasis: 50,
-        borderColor: 'black',
-        borderRightWidth: 1,
-
     },
     cellText: {
         lineHeight: 40,

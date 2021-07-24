@@ -1,66 +1,64 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-
-function Row({
-  title, 
-  items, 
-  renderCell, 
-  color
-}) {
-  return (
-    <View style={{
-      ...styles.tableRow,
-      borderColor: color
-    }}>
-      <View style={{
-        ...styles.tableRowHeader,
-        borderColor: color
-      }}>
-        <Text style={{
-          ...styles.tableRowHeaderText,
-          color
-        }}>
-          {title}
-        </Text>
-      </View>
-      {items.map((val, index) => renderCell(val, index))}
-    </View>
-  )
-}
+import { Table, TableWrapper, Row, Rows, Col } from '@deb-95/react-native-table-component';
 
 export default function ResultTableBase({
+  data,
   bgColor, 
   color, 
-  renderCell
+  renderCell = null,
+  renderHeader = null
 }) {
-    return (
-      <View style={{
-        ...styles.container,
-        backgroundColor: bgColor
-      }}>
-        <View style={styles.header}>
+
+
+    const twoDimensionalArray = Object.values(data)
+    console.log(twoDimensionalArray)
+
+    let rows;
+
+    if (renderCell) {
+      const rowNames = [
+        'weights',
+        'repetitions'
+      ]
+      rows = twoDimensionalArray.map(
+        (row, rowIndex) => row.map(
+          (val, cellIndex) => renderCell(val, cellIndex, rowNames[rowIndex])
+        )
+      )
+    } else {
+      rows = twoDimensionalArray
+    }
+
+    const header = renderHeader 
+      ? renderHeader(styles)
+      : (<View style={styles.header}>
           <Text style={{
             ...styles.headerTitle,
             color
-          }}>Date</Text>
-        </View>
-        <View style={{
-          ...styles.table,
-          borderColor: color,
-        }}>
-          <Row 
-            title="Вес"
-            items={[10, 10]}
-            renderCell={renderCell}
-            color={color}
-          />
-          <Row 
-            title="Повторы"
-            items={[10, 10]}
-            renderCell={renderCell}
-            color={color}
-          />
-        </View>
+          }}>
+            Date
+          </Text>
+        </View>)
+
+    return (
+      <View style={[
+        styles.container,
+        {backgroundColor: bgColor}
+      ]}>
+        {header}
+
+        <Table  style={styles.table} borderStyle={{borderWidth: 1, borderColor: color}}>
+          <TableWrapper style={styles.tableWrapper}>
+            <Col 
+              data={['Вес', 'Повторы']} 
+              style={styles.tableRowTitle} 
+              heightArr={[40, 40]} 
+              textStyle={[styles.tableRowTitleText, {color}]}
+            />
+            <Rows data={rows} widthArr={rows[0].map(_ => 50)} heightArr={[40, 40]} style={styles.tableRow} textStyle={styles.tableRowText} />
+          </TableWrapper>
+        </Table>
       </View>
     )
   }
@@ -69,11 +67,11 @@ export default function ResultTableBase({
 const styles = StyleSheet.create({
     container: {
       backgroundColor: '#fff',
-      paddingLeft: 1,
-      paddingRight: 1
-    },
-    table: {
-      borderBottomWidth: 1,
+      paddingTop: 15,
+      paddingBottom: 15,
+      paddingLeft: 15,
+      paddingRight: 15,
+      alignItems: 'flex-start'
     },
     header: {
       paddingBottom: 10,
@@ -83,21 +81,22 @@ const styles = StyleSheet.create({
       fontSize: 20,
       textAlign: 'center',
     },
-    tableRow: {
+    table: {
+      minWidth: 210
+    },
+    tableWrapper: {
       flexDirection: 'row',
-      height: 40,
-      borderTopWidth: 1,
-      borderLeftWidth: 1,
-      borderRightWidth: 1,
     },
-    tableRowHeader: {
-      flexBasis: 98,
-      paddingLeft: 10,
-      paddingRight: 10,
-      borderRightWidth: 1,
+    tableRow: {
+
     },
-    tableRowHeaderText: {
+    tableRowTitle: {
+      width: 150
+
+    },
+    tableRowTitleText: {
       fontSize: 18,
       lineHeight: 40,
+      padding: 5    
     }
   });

@@ -1476,6 +1476,11 @@
     "exec-sh" "^0.3.2"
     "minimist" "^1.2.0"
 
+"@deb-95/react-native-table-component@^1.2.8":
+  "integrity" "sha512-MRfz/PCSL44vY/p8l1BhjlDNWd00dZVhglyt619/i6tndH+TCgmcyRSpGPz60FgHIJfvxChqrWntmW9aLL72hQ=="
+  "resolved" "https://registry.npmjs.org/@deb-95/react-native-table-component/-/react-native-table-component-1.2.8.tgz"
+  "version" "1.2.8"
+
 "@egjs/hammerjs@^2.0.17":
   "integrity" "sha512-XQsZgjm2EcVUiZQf11UBJQfmZeEmOW8DpI1gsFeln6w0ae0ii4dMQEQ0kjl6DspdWX1aGY1/loyXnP0JS06e/A=="
   "resolved" "https://registry.npmjs.org/@egjs/hammerjs/-/hammerjs-2.0.17.tgz"
