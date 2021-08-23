@@ -1,6 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, TextInput, View, Text } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { StyleSheet, TextInput, View, Text, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import ResultTableBase from './ResultTableBase';
+import { Ionicons } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
+import { addResult } from '../resultListSlice'
+import { DateString } from '../../../components';
 
 function Cell({value = 0, index, onChange, rowName}) {
 
@@ -8,52 +12,69 @@ function Cell({value = 0, index, onChange, rowName}) {
     val = +val
 
     if (Number.isNaN(val)) return 
-    console.log(val)
-    if (!val) val = 0 
-    onChange(rowName, index, val)
+    let a = val;
+    console.log(a)
+    onChange(rowName, index, val.toString())
   }
+
+  const ref = useRef()
+
   return (
-    <View style={styles.cell}>
-      <TextInput
+    <TouchableOpacity
+      activeOpacity={1} 
+      style={{flex: 1}}
+      onPress={() => ref.current.focus()}>
+    <View style={styles.cell} pointerEvents="none">
+      <TextInput  
+          ref={ref}
           style={styles.cellText}
           name={index}
-          value={value}
+          value={value.toString()}
           keyboardType="numeric"
           onChangeText={handleChange}
+          
       />
     </View>
+    </TouchableOpacity>
   )
 }
 
 function Header({
   styles,
   color,
-  showBtnSubmit
+  date,
+  showBtnSubmit,
+  onSubmit
 }) {
   return (
     <View style={styles.header}>
       <Text style={{
         ...styles.headerTitle,
         color
-      }}>Date</Text>
+      }}>
+        <DateString value={date} />
+      </Text>
       {
-        showBtnSubmit&&(<View>
-          <Text>
-            +
-          </Text>
-        </View>)
+        showBtnSubmit&&(<TouchableOpacity
+          onPress={onSubmit}
+        >
+           <Ionicons name="md-checkmark-sharp" size={28} color="white" />
+        </TouchableOpacity>)
       }
     </View>
   )
 }
 
-export default function ResultTableForm(
-  onDataAvailable
-) {
+export default function ResultTableForm() {
   const [state, setState] = useState({
-    weights: [0],
-    repetitions: [0]
+    weights: [12, 12, 2, 4, 5, 5, 6,7],
+    repetitions: [12, 12, 2, 4, 5, 5, 6,7]
   })
+
+  const date = new Date();
+
+  const dispatch = useDispatch()
+
   const handleChangeCell = (key, index, val) => {
     console.log(key, index, val)
 
@@ -104,11 +125,19 @@ export default function ResultTableForm(
     dataAvailable = true
   }
 
+  const handleSubmit = () => {
+    dispatch(addResult({
+      date: date.toISOString(),
+      ...state
+    }))
+  }
+
   return (
       <ResultTableBase
           data={state}
           color="white"
           bgColor="#d32f2f"
+          borderColor="rgba(255, 255, 255, 0.3)"
           renderCell={
             (value, index, rowName) => (
               <Cell 
@@ -120,7 +149,13 @@ export default function ResultTableForm(
               />
           )}
           renderHeader={
-            (styles) => <Header styles={styles} color="white" showBtnSubmit={dataAvailable} />
+            (styles) => <Header 
+              styles={styles} 
+              date={date} 
+              color="white" 
+              showBtnSubmit={dataAvailable} 
+              onSubmit={handleSubmit}
+            />
           }
       />
   )
@@ -128,12 +163,16 @@ export default function ResultTableForm(
 
   const styles = StyleSheet.create({
     cell: {
+      backgroundColor: '#be2a2a',
+      // position: 'absolute', 
+      // zIndex: 1, 
     },
     cellText: {
+        height: 40,
         lineHeight: 40,
         fontSize: 18,
         textAlign: 'center',
         color: 'white',
-
+        backgroundColor: 'transparent'
     }
   });

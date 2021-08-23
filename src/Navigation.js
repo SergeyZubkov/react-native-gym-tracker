@@ -4,13 +4,9 @@ import {
   createStackNavigator,
   TransitionPresets,
 } from '@react-navigation/stack';
-import { Exercise, ExerciseList} from './screens'
+import { Exercise, ExerciseList, TimerSetup, Countdown } from './screens'
 
 const Stack = createStackNavigator();
-
-console.log(
-  'transition preset', TransitionPresets.SlideFromRightIOS
-)
 
 export default function Navigation() {
     return (
@@ -32,6 +28,10 @@ export default function Navigation() {
             options={({route}) => ({
               title: route.params.title
             })}
+          />
+          <Stack.Screen 
+            name="Установка таймера" 
+            component={TimerSetup} 
           />
         </Stack.Navigator>
       </NavigationContainer>

@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import ResultTableBase from './ResultTableBase';
 
+
 function Cell({value}) {
     return (
       <View style={styles.cell}>
@@ -10,14 +11,13 @@ function Cell({value}) {
     )
   }
 
-export default function ResultTableView() {
+export default function ResultTableView({data}) {
+    console.log(data)
     return (
         <ResultTableBase
-            data={{
-              weights: [12],
-              repetitions: [11]
-            }}
+            data={data}
             bgColor="#E1E2E1"
+            borderColor="rgba(0, 0, 0, 0.1)"
             renderCell={(value, index) => <Cell value={value} key={index} />}
         />
     )

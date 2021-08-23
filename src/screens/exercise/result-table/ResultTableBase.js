@@ -1,17 +1,19 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { Table, TableWrapper, Row, Rows, Col } from '@deb-95/react-native-table-component';
+import { DateString } from '../../../components'
 
 export default function ResultTableBase({
   data,
   bgColor, 
-  color, 
+  color,
+  borderColor, 
   renderCell = null,
   renderHeader = null
 }) {
-
-
-    const twoDimensionalArray = Object.values(data)
+  // data = {date: .., weigths: [], repetitions: []}
+    const {weights, repetitions, date} = data
+    const twoDimensionalArray = Object.values({weights, repetitions})
     console.log(twoDimensionalArray)
 
     let rows;
@@ -31,13 +33,13 @@ export default function ResultTableBase({
     }
 
     const header = renderHeader 
-      ? renderHeader(styles)
+      ? renderHeader(styles, date)
       : (<View style={styles.header}>
           <Text style={{
             ...styles.headerTitle,
             color
           }}>
-            Date
+           <DateString value={date} />
           </Text>
         </View>)
 
@@ -48,10 +50,11 @@ export default function ResultTableBase({
       ]}>
         {header}
 
-        <Table  style={styles.table} borderStyle={{borderWidth: 1, borderColor: color}}>
+        <ScrollView horizontal  keyboardShouldPersistTaps="always">
+        <Table  style={styles.table} borderStyle={{borderWidth: 1, borderColor: borderColor}}>
           <TableWrapper style={styles.tableWrapper}>
             <Col 
-              data={['Вес', 'Повторы']} 
+              data={['Вес(кг)', 'Повторы']} 
               style={styles.tableRowTitle} 
               heightArr={[40, 40]} 
               textStyle={[styles.tableRowTitleText, {color}]}
@@ -59,6 +62,7 @@ export default function ResultTableBase({
             <Rows data={rows} widthArr={rows[0].map(_ => 50)} heightArr={[40, 40]} style={styles.tableRow} textStyle={styles.tableRowText} />
           </TableWrapper>
         </Table>
+        </ScrollView>
       </View>
     )
   }
@@ -74,8 +78,12 @@ const styles = StyleSheet.create({
       alignItems: 'flex-start'
     },
     header: {
+      width: "100%",
       paddingBottom: 10,
       paddingTop: 10,
+      flexDirection: 'row',
+      alignItems: 'baseline',
+      justifyContent: 'space-between'
     },
     headerTitle: {
       fontSize: 20,
@@ -88,10 +96,10 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
     },
     tableRow: {
-
+      
     },
     tableRowTitle: {
-      width: 150
+      minWidth: 150
 
     },
     tableRowTitleText: {
